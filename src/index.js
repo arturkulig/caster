@@ -1,12 +1,3 @@
-function toArray(input) {
-    if (input instanceof Array) {
-        return input;
-    } else if (!!input) {
-        return [input];
-    }
-    return [];
-}
-
 function toString(input) {
     if (typeof input === 'string') {
         return input;
@@ -61,7 +52,7 @@ function toObject(input) {
 }
 
 module.exports = {
-    toArray,
+    toArray: require('./toArray.js'),
     toString,
     toNumber: require('./toNumber.js'),
     toFormData,

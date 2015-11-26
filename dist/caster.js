@@ -58,15 +58,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
 	
-	function toArray(input) {
-	    if (input instanceof Array) {
-	        return input;
-	    } else if (!!input) {
-	        return [input];
-	    }
-	    return [];
-	}
-	
 	function _toString(input) {
 	    if (typeof input === 'string') {
 	        return input;
@@ -125,9 +116,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	
 	module.exports = {
-	    toArray: toArray,
+	    toArray: __webpack_require__(1),
 	    toString: _toString,
-	    toNumber: __webpack_require__(1),
+	    toNumber: __webpack_require__(2),
 	    toFormData: toFormData,
 	    toObject: toObject
 	};
@@ -138,8 +129,33 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 	
+	module.exports = function toArray(input) {
+	    if (input instanceof Array) {
+	        return input;
+	    } else if (input !== null && typeof input !== 'undefined') {
+	        return [input];
+	    }
+	    return [];
+	};
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
 	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
 	
+	/**
+	 * Converts given input to a number.
+	 * Accepts:
+	 * -number
+	 * -string
+	 * -object
+	 *
+	 * @param {number|string|object} input
+	 * @returns {number}
+	 */
 	module.exports = function toNumber(input) {
 	    if (typeof input === 'number') {
 	        //eliminate NaN - outputs 0
