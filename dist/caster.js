@@ -58,31 +58,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
 	
-	function _toString(input) {
-	    if (typeof input === 'string') {
-	        return input;
-	    }
-	
-	    var aTry;
-	
-	    if ((typeof input === 'undefined' ? 'undefined' : _typeof(input)) === 'object' && typeof input.toString === 'function') {
-	        aTry = input.toString();
-	    }
-	    if ((typeof input === 'undefined' ? 'undefined' : _typeof(input)) === 'object' && typeof input.valueOf === 'function') {
-	        aTry = input.valueOf();
-	    }
-	    if (typeof aTry === 'string' && aTry.substr(0, 7) !== '[object') {
-	        return aTry;
-	    }
-	
-	    aTry = JSON.stringify(input);
-	
-	    if (aTry) {
-	        return aTry;
-	    }
-	
-	    return "";
-	}
+	var toArray = __webpack_require__(1),
+	    toNumber = __webpack_require__(2),
+	    _toString = __webpack_require__(3);
 	
 	function toFormData(input) {
 	    if ((typeof input === 'undefined' ? 'undefined' : _typeof(input)) !== 'object') {
@@ -116,9 +94,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	
 	module.exports = {
-	    toArray: __webpack_require__(1),
+	    toArray: toArray,
 	    toString: _toString,
-	    toNumber: __webpack_require__(2),
+	    toNumber: toNumber,
 	    toFormData: toFormData,
 	    toObject: toObject
 	};
@@ -182,6 +160,98 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	    return 0;
 	};
+
+/***/ },
+/* 3 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+	
+	function onlyCustomStringifiers(input) {
+	    var type = typeof input === 'undefined' ? 'undefined' : _typeof(input);
+	    if (type !== 'undefined' && type !== 'object') {
+	        // object methods should have return primitive value..
+	        if (type === 'string') {
+	            // ..so if it a string already..
+	            if (input.substr(0, 7) !== '[object') {
+	                // ..but not this ugly [object CLASSNAME] format
+	                return input;
+	            }
+	        } else {
+	            // Rerun toString for any other primitive value
+	            return toString(input);
+	        }
+	    }
+	}
+	
+	function tryObjectMethod(input, methodName) {
+	    if (typeof input[methodName] === 'function') {
+	        return onlyCustomStringifiers(input[methodName]());
+	    }
+	}
+	
+	/**
+	 * Converts any input to string
+	 * @param {*} input
+	 * @returns {string}
+	 */
+	function toString(input) {
+	    var type = typeof input === 'undefined' ? 'undefined' : _typeof(input);
+	
+	    if (type === 'string') {
+	        //bypass
+	        return input;
+	    }
+	    if (type === 'boolean') {
+	        // simple
+	        // i guess user is doing some kind of var dump to use this for boolean
+	        return input.toString();
+	    }
+	
+	    if (!input) {
+	        //falsey
+	        if (input === null || input === undefined) {
+	            return "";
+	        }
+	        if (input === 0) {
+	            return "0";
+	        }
+	    }
+	
+	    var aTry;
+	    if (input) {
+	        //truthy
+	        if (type === 'number') {
+	            return input.toString();
+	        }
+	        if (type === 'object') {
+	            aTry = tryObjectMethod(input, 'toLocaleString');
+	            if (aTry && typeof aTry === 'string') {
+	                return aTry;
+	            }
+	            aTry = tryObjectMethod(input, 'toString');
+	            if (aTry && typeof aTry === 'string') {
+	                return aTry;
+	            }
+	            aTry = tryObjectMethod(input, 'valueOf');
+	            if (aTry && typeof aTry === 'string') {
+	                return aTry;
+	            }
+	        }
+	
+	        try {
+	            return JSON.stringify(input);
+	        } catch (e) {
+	            return "";
+	        }
+	    }
+	
+	    return "";
+	}
+	
+	module.exports = toString;
 
 /***/ }
 /******/ ])

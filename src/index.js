@@ -1,28 +1,7 @@
-function toString(input) {
-    if (typeof input === 'string') {
-        return input;
-    }
+var toArray = require('./toArray.js'),
+    toNumber = require('./toNumber.js'),
+    toString = require('./toString.js');
 
-    var aTry;
-
-    if (typeof input === 'object' && typeof input.toString === 'function') {
-        aTry = input.toString();
-    }
-    if (typeof input === 'object' && typeof input.valueOf === 'function') {
-        aTry = input.valueOf();
-    }
-    if (typeof aTry === 'string' && aTry.substr(0, 7) !== '[object') {
-        return aTry;
-    }
-
-    aTry = JSON.stringify(input);
-
-    if (aTry) {
-        return aTry;
-    }
-
-    return "";
-}
 
 function toFormData(input) {
     if (typeof input !== 'object') {
@@ -52,9 +31,9 @@ function toObject(input) {
 }
 
 module.exports = {
-    toArray: require('./toArray.js'),
+    toArray,
     toString,
-    toNumber: require('./toNumber.js'),
+    toNumber,
     toFormData,
     toObject
 };
