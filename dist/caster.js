@@ -227,6 +227,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return input.toString();
 	        }
 	        if (type === 'object') {
+	            if (input instanceof Array) {
+	                if (input.length === 0) {
+	                    return "";
+	                } else {
+	                    return input.map(toString).join(', ');
+	                }
+	            }
 	            aTry = tryObjectMethod(input, 'toLocaleString');
 	            if (aTry && typeof aTry === 'string') {
 	                return aTry;

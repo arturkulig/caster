@@ -29,5 +29,11 @@ describe("toString", function () {
             expect(toString({valueOf: ()=>2})).toBe('2');
             expect(toString({})).toBe('{}');
         });
+        it("arrays", function () {
+            var beginningOfEverything = new Date(0);
+            expect(toString([])).toBe('');
+            expect(toString(['a', 2])).toBe('a, 2');
+            expect(toString(['a', 2, beginningOfEverything])).toBe('a, 2, '+beginningOfEverything.toLocaleString());
+        })
     })
 });

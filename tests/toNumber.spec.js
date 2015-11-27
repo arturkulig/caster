@@ -23,6 +23,8 @@ describe("toNumber", ()=> {
         expect(toNumber("#ff")).toBe(255);
     });
     it("gets value of an object if available", ()=> {
-        expect(toNumber(new Date)).toBe(Date.now());
+        var now = Date.now();
+        var dateNow = new Date(now);
+        expect(toNumber(dateNow)).toBe(now);
     });
 });
