@@ -1,6 +1,8 @@
 var toArray = require('./toArray.js'),
     toNumber = require('./toNumber.js'),
-    toString = require('./toString.js');
+    toString = require('./toString.js'),
+    toObject = require('./toObject.js'),
+    all = require('./all.js');
 
 
 function toFormData(input) {
@@ -14,26 +16,10 @@ function toFormData(input) {
     return data;
 }
 
-function toObject(input) {
-    if (typeof input === "string") {
-        return {
-            toString() {
-                return input;
-            }
-        };
-    } else if (typeof input === "number") {
-        return {
-            valueOf: ()=>input,
-            toString: ()=>toString(input)
-        };
-    }
-    return input;
-}
+all.toArray = toArray;
+all.toNumber = toNumber;
+all.toString = toString;
+all.toObject = toObject;
+all.toFormData = toFormData;
 
-module.exports = {
-    toArray,
-    toString,
-    toNumber,
-    toFormData,
-    toObject
-};
+module.exports = all;

@@ -22,7 +22,8 @@ Returns given array or wraps defined (yet not a `null`) value in an array.
 ```javascript
 toObject(input: any): {[id:string]: any}
 ```
->TODO
+Returns an object to given input.
+Deals with: undefined, null, string, number, Map.
 
 
 ```javascript

@@ -60,7 +60,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var toArray = __webpack_require__(1),
 	    toNumber = __webpack_require__(2),
-	    _toString = __webpack_require__(3);
+	    toString = __webpack_require__(3),
+	    toObject = __webpack_require__(4),
+	    all = __webpack_require__(5);
 	
 	function toFormData(input) {
 	    if ((typeof input === 'undefined' ? 'undefined' : _typeof(input)) !== 'object') {
@@ -73,33 +75,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return data;
 	}
 	
-	function toObject(input) {
-	    if (typeof input === "string") {
-	        return {
-	            toString: function toString() {
-	                return input;
-	            }
-	        };
-	    } else if (typeof input === "number") {
-	        return {
-	            valueOf: function valueOf() {
-	                return input;
-	            },
-	            toString: function toString() {
-	                return _toString(input);
-	            }
-	        };
-	    }
-	    return input;
-	}
+	all.toArray = toArray;
+	all.toNumber = toNumber;
+	all.toString = toString;
+	all.toObject = toObject;
+	all.toFormData = toFormData;
 	
-	module.exports = {
-	    toArray: toArray,
-	    toString: _toString,
-	    toNumber: toNumber,
-	    toFormData: toFormData,
-	    toObject: toObject
-	};
+	module.exports = all;
 
 /***/ },
 /* 1 */
@@ -259,6 +241,76 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	
 	module.exports = toString;
+
+/***/ },
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+	
+	var caster = __webpack_require__(5);
+	
+	function createValueObject(input) {
+	
+	    function valueObject() {}
+	
+	    valueObject.prototype.valueOf = function () {
+	        return input;
+	    };
+	    valueObject.prototype.toString = function () {
+	        return caster.toString(input);
+	    };
+	
+	    return valueObject;
+	}
+	
+	function mapToObject(input) {
+	    var keys = input.keys();
+	    var result = {};
+	    while (true) {
+	        var nextKey = keys.next();
+	        if (nextKey.done) {
+	            break;
+	        }
+	        var mapKey = nextKey.value;
+	        var objectKey = caster.toString(mapKey);
+	        if (objectKey) {
+	            result[objectKey] = input.get(mapKey);
+	        }
+	    }
+	    return result;
+	}
+	
+	function toObject(input) {
+	    var type = typeof input === 'undefined' ? 'undefined' : _typeof(input);
+	
+	    if (type === 'undefined' || input === null) {
+	        // always cast empty values to empty values of proper type
+	        return {};
+	    } else if (type === "object") {
+	        if (input instanceof Map) {
+	            return mapToObject(input);
+	        }
+	        // bypass what already is an simple object
+	        return input;
+	    } else {
+	        var valueObject = createValueObject(input);
+	        return new valueObject();
+	    }
+	    return input;
+	}
+	
+	module.exports = toObject;
+
+/***/ },
+/* 5 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	module.exports = {};
 
 /***/ }
 /******/ ])
