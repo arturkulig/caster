@@ -11,7 +11,7 @@ function createValueObject(input) {
     return valueObject;
 }
 
-function mapToObject(input) {
+function iterableToObject(input) {
     var keys = input.keys();
     var result = {};
     while (true) {
@@ -28,6 +28,14 @@ function mapToObject(input) {
     return result;
 }
 
+function arrayToObject(input) {
+    var result = {};
+    for (var i = 0; i < input.length; i++) {
+        result[i] = input[i];
+    }
+    return result;
+}
+
 function toObject(input) {
     var type = typeof input;
 
@@ -36,7 +44,10 @@ function toObject(input) {
         return {};
     } else if (type === "object") {
         if (input instanceof Map) {
-            return mapToObject(input);
+            return iterableToObject(input);
+        }
+        if (input instanceof Array) {
+            return arrayToObject(input);
         }
         // bypass what already is an simple object
         return input;

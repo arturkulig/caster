@@ -61,8 +61,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var toArray = __webpack_require__(1),
 	    toNumber = __webpack_require__(2),
 	    toString = __webpack_require__(3),
-	    toObject = __webpack_require__(4),
-	    all = __webpack_require__(5);
+	    toObject = __webpack_require__(5),
+	    all = __webpack_require__(4);
 	
 	function toFormData(input) {
 	    if ((typeof input === 'undefined' ? 'undefined' : _typeof(input)) !== 'object') {
@@ -145,11 +145,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 3 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+	
+	var caster = __webpack_require__(4);
 	
 	function onlyCustomStringifiers(input) {
 	    var type = typeof input === 'undefined' ? 'undefined' : _typeof(input);
@@ -209,29 +211,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return input.toString();
 	        }
 	        if (type === 'object') {
-	            if (input instanceof Array) {
-	                if (input.length === 0) {
+	            var objectInput = caster.toObject(input);
+	            if (objectInput instanceof Array) {
+	                if (objectInput.length === 0) {
 	                    return "";
 	                } else {
-	                    return input.map(toString).join(', ');
+	                    return objectInput.map(toString).join(', ');
 	                }
 	            }
-	            aTry = tryObjectMethod(input, 'toLocaleString');
+	            aTry = tryObjectMethod(objectInput, 'toLocaleString');
 	            if (aTry && typeof aTry === 'string') {
 	                return aTry;
 	            }
-	            aTry = tryObjectMethod(input, 'toString');
+	            aTry = tryObjectMethod(objectInput, 'toString');
 	            if (aTry && typeof aTry === 'string') {
 	                return aTry;
 	            }
-	            aTry = tryObjectMethod(input, 'valueOf');
+	            aTry = tryObjectMethod(objectInput, 'valueOf');
 	            if (aTry && typeof aTry === 'string') {
 	                return aTry;
 	            }
 	        }
 	
 	        try {
-	            return JSON.stringify(input);
+	            return JSON.stringify(objectInput, null, "  ");
 	        } catch (e) {
 	            return "";
 	        }
@@ -244,13 +247,21 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 4 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	module.exports = {};
+
+/***/ },
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
 	
-	var caster = __webpack_require__(5);
+	var caster = __webpack_require__(4);
 	
 	function createValueObject(input) {
 	
@@ -303,14 +314,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	
 	module.exports = toObject;
-
-/***/ },
-/* 5 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	module.exports = {};
 
 /***/ }
 /******/ ])

@@ -1,3 +1,5 @@
+var caster = require('./all.js');
+
 function onlyCustomStringifiers(input) {
     var type = typeof input;
     if (type !== 'undefined' && type !== 'object') {
@@ -62,23 +64,25 @@ function toString(input) {
                 } else {
                     return input.map(toString).join(', ')
                 }
-            }
-            aTry = tryObjectMethod(input, 'toLocaleString');
-            if (aTry && typeof aTry === 'string') {
-                return aTry;
-            }
-            aTry = tryObjectMethod(input, 'toString');
-            if (aTry && typeof aTry === 'string') {
-                return aTry;
-            }
-            aTry = tryObjectMethod(input, 'valueOf');
-            if (aTry && typeof aTry === 'string') {
-                return aTry;
+            } else {
+                var objectInput = caster.toObject(input);
+                aTry = tryObjectMethod(objectInput, 'toLocaleString');
+                if (aTry && typeof aTry === 'string') {
+                    return aTry;
+                }
+                aTry = tryObjectMethod(objectInput, 'toString');
+                if (aTry && typeof aTry === 'string') {
+                    return aTry;
+                }
+                aTry = tryObjectMethod(objectInput, 'valueOf');
+                if (aTry && typeof aTry === 'string') {
+                    return aTry;
+                }
             }
         }
 
         try {
-            return JSON.stringify(input);
+            return JSON.stringify(objectInput, null, "  ");
         } catch (e) {
             return "";
         }

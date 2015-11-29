@@ -8,7 +8,7 @@ describe("toString", function () {
         expect(toString("caster")).toBe("caster");
     });
     describe("stringifies", function () {
-        it("undefined to empty string", function () {
+        it("undefined", function () {
             expect(toString()).toBe('');
             expect(toString(null)).toBe('');
         });
@@ -19,21 +19,30 @@ describe("toString", function () {
             expect(toString(0xfe)).toBe("254");
             expect(toString(NaN)).toBe("");
         });
-        it("booleans", function () {
+        it("boolean", function () {
             expect(toString(false)).toBe("false");
             expect(toString(true)).toBe("true");
         });
-        it("objects", function () {
+        it("object", function () {
             var beginningOfEverything = new Date(0);
             expect(toString(beginningOfEverything)).toBe(beginningOfEverything.toLocaleString());
             expect(toString({valueOf: ()=>2})).toBe('2');
             expect(toString({})).toBe('{}');
+            expect(toString({a:{b:"c"}})).toBe('{\n  "a": {\n    "b": "c"\n  }\n}');
         });
-        it("arrays", function () {
+        it("array", function () {
             var beginningOfEverything = new Date(0);
             expect(toString([])).toBe('');
             expect(toString(['a', 2])).toBe('a, 2');
-            expect(toString(['a', 2, beginningOfEverything])).toBe('a, 2, '+beginningOfEverything.toLocaleString());
-        })
+            expect(toString(['a', 2, beginningOfEverything])).toBe('a, 2, ' + beginningOfEverything.toLocaleString());
+        });
+        it("map", function () {
+            var m = new Map();
+            m.set(1, 1);
+            m.set("a", 2);
+            m.set(null, 3);
+            m.set(false, 4);
+            expect(toString(m)).toBe('{\n  "1": 1,\n  "a": 2,\n  "false": 4\n}');
+        });
     })
 });
